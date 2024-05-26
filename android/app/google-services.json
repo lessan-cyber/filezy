@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "736966459405",
+    "project_id": "filezy-cdc87",
+    "storage_bucket": "filezy-cdc87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736966459405:android:b24bca242242cfe8f11544",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLDOtrQPPb_2yFZWnS_OdeU7-5_FpKWsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736966459405:android:325f95828c204453f11544",
+        "android_client_info": {
+          "package_name": "com.example.filezy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLDOtrQPPb_2yFZWnS_OdeU7-5_FpKWsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

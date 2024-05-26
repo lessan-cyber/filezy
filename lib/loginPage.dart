@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:filezy/thirdPage.dart';
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
+import 'package:filezy/connextionTypes.dart';
+
+enum LoginFormType {
+  login,
+  register,
+}
+
+final formType =  ReactiveValueNotifier(LoginFormType.login);
 
 class SecondScreen extends StatefulWidget {
   @override
@@ -8,8 +17,12 @@ class SecondScreen extends StatefulWidget {
 
 class _SecondScreenState extends State<SecondScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -64,92 +77,96 @@ class _SecondScreenState extends State<SecondScreen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Container(
-                    width: size.width,
-                    height: size.height * 0.075,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFf2f2f2),
-                      borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: size.width * 0.42,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF2252fd),
-                               borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: const Center(child: Text("Login"
-                            ,style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                              ),),
-                            ),
-                          ),
-                          Container(
-                            width: size.width * 0.42,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: const Center(child: Text("Register"
-                              ,style: TextStyle(
-                                color: Color(0xFF2252fd),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                              ),),
-                            ),
-                          ),
-
-
-                        ],
-                      ),
-                    ),
-                  ),
+                  const ConnextionTypes(),
                   SizedBox(height: size.height * 0.045,),
-                  const Row(
-                    children: [
-                      Text("Username or Email",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: size.height * 0.01,),
                   // form field
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
+                        if (formType.reactiveValue(context) == LoginFormType.register)
+                          const Row(
+                            children: [
+                              Text( "Email",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black54
+                                ),
+                              ),
+                            ],
+                          ),
+                        SizedBox(height: size.height * 0.01,),
+                        if (formType.reactiveValue(context) == LoginFormType.register)
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              fillColor: Color(0xFFf2f2f2),
+                              filled: true,
+                              hintText: "Enter your email",
+                              hintStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                                borderSide: BorderSide(color: Colors.transparent),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(15)),
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your username';
+                              }
+                              return null;
+                            },
+                          ),
+                        SizedBox(height: size.height * 0.02,),
+                        Row(
+                          children: [
+                            Text( formType.reactiveValue(context) == LoginFormType.register ? "Username" : "Username or email",
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black54
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: size.height * 0.02,),
                         TextFormField(
                           controller: _usernameController,
-                          decoration: const InputDecoration(
-                            fillColor: Color(0xFFf2f2f2),
+                          decoration:  InputDecoration(
+                            fillColor: const Color(0xFFf2f2f2),
                             filled: true,
-                            hintText: "username ",
-                            hintStyle: TextStyle(
+                            hintText: formType.reactiveValue(context) == LoginFormType.register ? "Enter username" : " Enter username or email",
+                            hintStyle: const TextStyle(
                               color: Colors.black54,
                               fontSize: 14,
 
                             ),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(15)),
                               borderSide: BorderSide(color: Colors.transparent),
                             ),
-                            border: OutlineInputBorder(
+                            border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(15)),
                               borderSide: BorderSide(
                                 color: Colors.transparent,
                               ),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(15)),
                               borderSide: BorderSide(
                                 color: Colors.transparent,
@@ -177,7 +194,7 @@ class _SecondScreenState extends State<SecondScreen> {
                         ),
                         SizedBox(height: size.height * 0.01,),
                         TextFormField(
-                          obscureText: true
+                          obscureText: true,
                           controller: _passwordController,
                           decoration: const InputDecoration(
                             fillColor: Color(0xFFf2f2f2),
@@ -228,34 +245,36 @@ class _SecondScreenState extends State<SecondScreen> {
 
                             onPressed: () {
                               if (_formKey.currentState?.validate() ?? false) {
-                                // If the form is valid, display a Snackbar.
-                                // ScaffoldMessenger.of(context)
-                                //     .showSnackBar(SnackBar(content: Text('Processing Data')));
-                                // TODO: Implement your form submission logic.
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    transitionDuration: Duration(seconds: 1),
-                                    pageBuilder: (context, animation, secondaryAnimation) => ThirdPage(),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      var begin = Offset(1.0, 0.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.easeInOutBack;
+                                if (formType.reactiveValue(context) == LoginFormType.register && _emailController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter your email')));
+                                }
+                                else{
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionDuration: const Duration(seconds: 1),
+                                      pageBuilder: (context, animation, secondaryAnimation) => const ThirdPage(),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        var begin = const Offset(1.0, 0.0);
+                                        var end = Offset.zero;
+                                        var curve = Curves.easeInOutBack;
 
-                                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-                                      return  SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
+                                        return  SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+
                               }
                             },
                             child: Center(
-                              child: Text("Login",
-                                style: TextStyle(
+                              child: Text(formType.reactiveValue(context) == LoginFormType.login? "Login":"Register",
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
@@ -273,11 +292,11 @@ class _SecondScreenState extends State<SecondScreen> {
                     children: [
                       Container(
                         width: size.width * 0.4,
-                        child: Divider(color: Colors.grey,
+                        child: const Divider(color: Colors.grey,
                           height: 2,
                         ),
                       ),
-                      Text("  or  ",
+                      const Text("  or  ",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
@@ -286,7 +305,7 @@ class _SecondScreenState extends State<SecondScreen> {
                       ),
                       Container(
                         width: size.width * 0.4,
-                        child: Divider(color: Colors.grey,
+                        child: const Divider(color: Colors.grey,
                           height: 2,),
                       ),
                     ],
@@ -307,6 +326,44 @@ class _SecondScreenState extends State<SecondScreen> {
         ],
 
       )
+    );
+  }
+}
+
+class FormTab extends StatelessWidget {
+  const FormTab({
+    super.key,
+    required this.size,
+    required this.selected,
+    required this.onSelected,
+    required this.label,
+  });
+  final bool selected;
+  final Size size;
+  final void Function() onSelected;
+  final String label ;
+  
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onSelected,
+      child: AnimatedContainer(
+        width: size.width * 0.42,
+        decoration: BoxDecoration(
+            color: selected? const Color(0xFF2252fd):Colors.white,
+            borderRadius: BorderRadius.circular(15)
+        ),
+        duration: const Duration(milliseconds: 500),
+        child: Center(child: Text(label,
+          style: TextStyle(
+            color: selected? Colors.white:const Color(0xFF2252fd),
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          ),),
+        ),
+      ),
     );
   }
 }
@@ -344,7 +401,7 @@ class LoginOptions extends StatelessWidget {
               height: 32,),
           ),
           Text(loginOption,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black54,
               fontSize: 18,
               fontWeight: FontWeight.w500,
